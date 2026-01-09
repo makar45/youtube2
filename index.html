@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Мой мини YouTube</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    video { width: 400px; display: block; margin-bottom: 10px; }
+    .video-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
+    .comments { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Мой мини YouTube</h1>
+
+  <h2>Загрузить видео</h2>
+  <input type="file" id="upload" accept="video/*">
+  <button onclick="addVideo()">Добавить</button>
+
+  <h2>Видео</h2>
+  <div id="videos"></div>
+
+  <script>
+    const videosDiv = document.getElementById('videos');
+
+    function addVideo() {
+      const fileInput = document.getElementById('upload');
+      if (!fileInput.files[0]) return;
+
+      const url = URL.createObjectURL(fileInput.files[0]);
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.innerHTML = `
+        <video src="${url}" controls></video>
+        <button onclick="like(this)">👍 Лайк <span>0</span></button>
+        <div class="comments">
+          <input type="text" placeholder="Комментарий">
+          <button onclick="comment(this)">Отправить</button>
+          <ul></ul>
+        </div>
+      `;
+      videosDiv.appendChild(card);
+    }
+
+    function like(btn) {
+      const span = btn.querySelector('span');
+      span.textContent = parseInt(span.textContent) + 1;
+    }
+
+    function comment(btn) {
+      const input = btn.previousElementSibling;
+      const ul = btn.nextElementSibling;
+      if (input.value.trim() !== "") {
+        const li = document.createElement('li');
+        li.textContent = input.value;
+        ul.appendChild(li);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
